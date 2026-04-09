@@ -1,0 +1,9 @@
+[Unit]
+Description=Surveillance téléchargement Discord
+
+[Service]
+ExecStart=/home/aqua47/Documents/code/ADU/watch_discord.sh
+Restart=always
+
+[Install]
+WantedBy=default.target
