@@ -1,23 +1,32 @@
 #!/bin/bash
-# Utilise le chemin absolu vers ton dossier actuel
-SCRIPT_PATH="/home/aqua47/Documents/code/ADU"
-source "$SCRIPT_PATH/config.conf"
 
-# Vérifie si le dossier de téléchargement existe pour éviter que inotifywait crash
-if [ ! -d "$DOWNLOAD_DIR" ]; then
-    echo "Erreur: Le dossier $DOWNLOAD_DIR n'existe pas."
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+# Search for the config file
+if [ -f "$HOME/.config/adu/config.conf" ]; then
+    source "$HOME/.config/adu/config.conf"
+elif [ -f "$SCRIPT_DIR/config.conf" ]; then
+    source "$SCRIPT_DIR/config.conf"
+else
+    echo "Error: Configuration file not found."
     exit 1
 fi
 
-echo "👀 Surveillance de $DOWNLOAD_DIR..."
+# Check if the download directory exists to prevent inotifywait from crashing
+if [ ! -d "$DOWNLOAD_DIR" ]; then
+    echo "Error: The directory $DOWNLOAD_DIR does not exist."
+    exit 1
+fi
 
-# On utilise inotifywait en mode moniteur (-m)
+echo "👀 Monitoring $DOWNLOAD_DIR..."
+
+# Use inotifywait in monitor mode (-m)
 inotifywait -m "$DOWNLOAD_DIR" -e close_write |
     while read path action file; do
-        if [[ "$file" == discord-*.deb ]]; then
-            echo "✨ Nouveau paquet détecté : $file"
-            sleep 2
-            # Sous KDE, on utilise konsole
-            konsole -e "$SCRIPT_PATH/update_discord.sh"
+        if [[ "$file" == $FILE_PATTERN ]]; then
+            echo "✨ New package detected: $file"
+            sleep 5
+            # Under KDE, use konsole to prompt for sudo password
+            konsole -e "$SCRIPT_DIR/update_discord.sh"
         fi
     done

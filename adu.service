@@ -1,0 +1,11 @@
+[Unit]
+Description=Discord Deb Package Watcher
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/adu/watch_discord.sh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
