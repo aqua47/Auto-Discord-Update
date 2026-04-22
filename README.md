@@ -11,9 +11,7 @@ This project checks for the new file in the download folder of the user, install
 | Debian  | KDE                 | ✅      |
 | Debian  | Gnome               | ❓      |
 | Debian  | XFCE                | ❓      |
-|
 | Ubuntu  | Gnome               | ❓      |
-|
 | Kubuntu | KDE                 | ❓      |
 
 ## Install
